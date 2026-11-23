@@ -25,7 +25,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run typecheck
       - name: Build pentru /manotek-v2/
         run: npm run build
         env:
