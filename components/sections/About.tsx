@@ -30,7 +30,7 @@ export function About() {
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-sand">
               {about.photo ? (
                 <Image
-                  src={about.photo}
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${about.photo}`}
                   alt={about.photoAlt}
                   fill
                   sizes="(min-width: 1024px) 40vw, (min-width: 768px) 60vw, 100vw"
