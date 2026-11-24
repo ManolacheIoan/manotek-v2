@@ -27,7 +27,9 @@ export function SmoothScroll() {
       const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
       if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
       const url = new URL(a.href, window.location.href);
-      if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || !url.hash) return;
+      // „/pagina” și „/pagina/” sunt aceeași pagină (bara finală nu contează)
+      const path = (p: string) => p.replace(/\/+$/, "") || "/";
+      if (url.origin !== window.location.origin || path(url.pathname) !== path(window.location.pathname) || !url.hash) return;
       const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
       if (!el) return;
       e.preventDefault();

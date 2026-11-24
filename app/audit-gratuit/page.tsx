@@ -16,9 +16,9 @@ import { StairText } from "@/components/ui/StairText";
 export const metadata: Metadata = {
   title: auditPage.label,
   description: auditPage.seoDescription,
-  alternates: { canonical: "/audit-gratuit" },
+  alternates: { canonical: "/audit-gratuit/" },
   openGraph: {
-    url: "/audit-gratuit",
+    url: "/audit-gratuit/",
     title: `${auditPage.label} | ${site.name}`,
     description: auditPage.seoDescription,
   },

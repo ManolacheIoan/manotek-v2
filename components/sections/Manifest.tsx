@@ -52,6 +52,7 @@ export function Manifest() {
       ref={ref}
       id="manifest"
       data-theme="dark"
+      data-scroll-pin
       aria-labelledby="manifest-text"
       className="relative h-[240vh] bg-ink text-paper motion-reduce:h-auto"
     >

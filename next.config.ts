@@ -11,6 +11,9 @@ if (!/^(\/[a-z0-9-]+)*$/.test(basePath)) {
 
 const nextConfig: NextConfig = {
   ...(basePath ? { basePath } : {}),
+  // URL-uri cu bară finală („/audit-gratuit/”), exact cum le servește GitHub Pages;
+  // fără ea, linkurile „/#servicii” devin „/manotek-v2#servicii” și Next.js le tratează ca altă pagină
+  trailingSlash: true,
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
   // Export static: `npm run build` generează site-ul complet în folderul `out/`.
   output: "export",

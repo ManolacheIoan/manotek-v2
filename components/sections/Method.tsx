@@ -24,7 +24,7 @@ export function Method() {
       <LoopExplainer />
 
       <div className="wrap mt-24 lg:mt-32">
-        <div className="grid-page gap-y-6">
+        <div data-scroll-stop className="grid-page gap-y-6">
           <MaskText as="h3" text={method.principlesTitle} className="col-span-full text-d3 md:col-span-5 lg:col-span-7" />
         </div>
         <ol className="mt-12 border-t border-ink/15 lg:mt-16">

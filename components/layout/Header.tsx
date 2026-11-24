@@ -21,7 +21,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   // Pe pagina de audit, butonul duce direct la formular
-  const onAudit = usePathname() === "/audit-gratuit";
+  const onAudit = usePathname().replace(/\/+$/, "") === "/audit-gratuit";
   const last = useRef(0);
 
   useMotionValueEvent(scrollY, "change", (y) => {

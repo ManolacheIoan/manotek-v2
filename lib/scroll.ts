@@ -30,3 +30,36 @@ export function scrollToElement(el: HTMLElement, hash?: string) {
   if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
   el.focus({ preventScroll: true });
 }
+
+/** Ținta unei derulări pornite de `scrollToY`, cât timp e în curs. */
+let heading: number | null = null;
+
+/** Poziția spre care merge pagina: ținta animației în curs, dacă există, altfel poziția actuală. */
+export function scrollTarget() {
+  if (!lenis) return window.scrollY;
+  // În timpul unei derulări programate, Lenis raportează poziția curentă, nu ținta;
+  // dacă utilizatorul a intervenit cu rotița, ținta lui are prioritate.
+  if (heading !== null && lenis.isScrolling === "smooth" && lenis.targetScroll === lenis.animatedScroll) return heading;
+  return lenis.targetScroll;
+}
+
+/** E în curs o derulare pornită de `scrollToY`? */
+export function isHeading() {
+  return heading !== null && scrollTarget() === heading;
+}
+
+/** Derulează lin până la `y`; fără Lenis (mișcare redusă) sare direct. */
+export function scrollToY(y: number, duration: number, easing: (t: number) => number) {
+  if (!lenis) {
+    window.scrollTo({ top: y, behavior: "auto" });
+    return;
+  }
+  heading = y;
+  lenis.scrollTo(y, {
+    duration,
+    easing,
+    onComplete: () => {
+      heading = null;
+    },
+  });
+}

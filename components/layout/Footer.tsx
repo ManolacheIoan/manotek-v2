@@ -66,7 +66,8 @@ export function Footer() {
         <FooterWordmark />
       </div>
 
-      <div className="wrap flex flex-col gap-3 border-t border-paper/12 py-6 text-small text-paper/62 sm:flex-row sm:items-center sm:justify-between">
+      {/* pb-24: loc liber pentru butonul fix „Derulează” / „Sus”, ca să nu acopere linkurile */}
+      <div className="wrap flex flex-col gap-3 border-t border-paper/12 pt-6 pb-24 text-small text-paper/62 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © <CurrentYear /> {site.name} – PFA. {footer.rights}
         </p>

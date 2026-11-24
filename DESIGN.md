@@ -123,6 +123,12 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
   - doar pe mobil;
   - cerc de 48px `paper`, chenar `rule` și simbol `ink`;
   - apare după hero și dispare în secțiunea de contact.
+- **Butonul „Derulează” (`ScrollStepper`):**
+  - mereu vizibil, pe toate paginile; desktop: pastilă în dreapta jos, cu eticheta „Derulează” și linia cu segmentul care coboară; mobil: cerc de 48px în stânga jos (în dreapta e WhatsApp), cu o săgeată;
+  - la fiecare apăsare coboară lin la secțiunea următoare (Lenis, curbă care pornește lin și frânează lung, ~0,9–1,6 s după distanță); în secțiunile mai lungi de un ecran avansează cel mult ~85% de ecran pe pas, ca să nu sară peste conținut;
+  - opriri speciale: finalul Manifestului (fraza complet aprinsă), câte un panou la Serviciile orizontale, fiecare etapă a buclei obiceiului pe desktop (`data-scroll-stop="center"`) și titlul „Cinci principii” (`data-scroll-stop`); secțiunile lipicioase se marchează cu `data-scroll-pin`;
+  - apăsat de mai multe ori la rând, continuă din viteză către opririle următoare;
+  - la finalul paginii devine „Sus”; peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
 
 ---
 
@@ -130,7 +136,7 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
 
 | # | Secțiune | Fundal | Compoziție |
 | --- | --- | --- | --- |
-| 1 | **Hero** | paper | Titlu pe două rânduri, „Mai mulți *clienți* / pentru afacerea ta.”, aliniat la stânga, cu „clienți” în italic `ochre`. Sub el, pe coloanele 1–5: subtitlul și butoanele. În dreapta, pe coloanele 7–12: bucla, mare (~86% din coloană, maximum 36rem) și centrată vertical față de titlu și butoane. Nodurile ei sunt sus („Indiciu”) și jos, ca etichetele să nu atingă titlul; pe mobil apar doar numerele. Liniile se desenează, iar un punct auriu orbitează lent. Pe desktop, blocul principal e centrat vertical în ecran. Subtitlul are `text-balance` (rânduri egale). Jos: indexul „Lucrez cu” (Restaurante · Cafenele · … · Depozite de materiale, separate de puncte aurii) și indicatorul de scroll. |
+| 1 | **Hero** | paper | Titlu pe două rânduri, „Mai mulți *clienți* / pentru afacerea ta.”, aliniat la stânga, cu „clienți” în italic `ochre`. Sub el, pe coloanele 1–5: subtitlul și butoanele. În dreapta, pe coloanele 7–12: bucla, mare (~86% din coloană, maximum 36rem) și centrată vertical față de titlu și butoane. Nodurile ei sunt sus („Indiciu”) și jos, ca etichetele să nu atingă titlul; pe mobil apar doar numerele. Liniile se desenează, iar un punct auriu orbitează lent. Pe desktop, blocul principal e centrat vertical în ecran. Subtitlul are `text-balance` (rânduri egale). Jos: indexul „Lucrez cu” (Restaurante · Cafenele · … · Depozite de materiale, separate de puncte aurii); în dreapta, pe desktop, un spațiu rezervat pentru butonul fix „Derulează”. |
 | 2 | **Manifest** | ink | Secțiune lipicioasă (`sticky`) de 240vh. Fraza Display XL, pe coloanele 1–10, se luminează cuvânt cu cuvânt la scroll (opacitate de la 0,35 la 1; minimul de 0,35 păstrează contrastul de 3:1). „simt” trece din crem în `ochre` prin două straturi suprapuse. Dedesubt, o frază în paper 62%, lată (coloanele 3–10), pe două rânduri. |
 | 3 | **Problema** | paper | În stânga, pe coloanele 1–3, eticheta „Problema”. Titlul Display L pe coloanele 4–12. Urmează trei rânduri editoriale separate de linii care se desenează. Fiecare rând are numărul (Fraunces italic) pe coloana 1, afirmația Display L pe coloanele 2–8 și explicația pe 9–12. Încheie o frază cu link. |
 | 4 | **Servicii** | sand | **Desktop:** secțiune lipicioasă cu scroll orizontal. Primul panou are titlul. Urmează șase panouri de 52vw, separate de linii verticale. Fiecare panou are, de sus în jos: indexul „01 / 06”, ilustrația SVG (pătrat de 34vh, aliniată la stânga cu textul), titlul Display L, beneficiul (Lead, ink) și descrierea (stone). Cu mișcare redusă, panourile devin o listă verticală, cu linii între ele. Jos, o bară de progres de 1px. **Mobil și tabletă:** titlul, apoi o listă accordion cu linii fine. |

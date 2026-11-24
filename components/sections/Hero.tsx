@@ -59,12 +59,8 @@ export function Hero() {
             ))}
           </ul>
         </div>
-        <a href="#manifest" className="hero-fade hidden shrink-0 flex-col items-center gap-3 sm:flex" style={d(1400)}>
-          <span className="label text-stone">{hero.scroll}</span>
-          <span aria-hidden="true" className="relative block h-14 w-px overflow-hidden bg-rule">
-            <span className="scroll-cue absolute inset-x-0 top-0 block h-1/3 bg-ink" />
-          </span>
-        </a>
+        {/* loc rezervat pentru butonul fix „Derulează” (ScrollStepper), ca lista să nu treacă pe sub el */}
+        <span aria-hidden="true" className="hidden h-12 w-36 shrink-0 md:block" />
       </div>
     </section>
   );

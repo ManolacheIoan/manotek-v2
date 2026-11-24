@@ -73,6 +73,15 @@ export const header = {
   skip: "Sari la conținut",
 };
 
+/* ───────────── Butonul „Derulează” (mereu vizibil, în colțul ecranului) ───────────── */
+
+export const scrollStep = {
+  label: "Derulează",
+  labelTop: "Sus",
+  aria: "Derulează la secțiunea următoare",
+  ariaTop: "Sus, înapoi la începutul paginii",
+};
+
 /* ───────────── Hero ───────────── */
 
 export const hero = {
@@ -96,7 +105,6 @@ export const hero = {
     "Service-uri auto",
     "Depozite de materiale",
   ],
-  scroll: "Derulează",
   loop: ["Indiciu", "Rutină", "Recompensă"],
   loopLabel: "Bucla obiceiului: indiciu, rutină, recompensă",
 };

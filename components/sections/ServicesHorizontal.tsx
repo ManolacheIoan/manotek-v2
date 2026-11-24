@@ -22,7 +22,7 @@ export function ServicesHorizontal() {
   const total = services.items.length;
 
   return (
-    <div ref={ref} className="hs relative hidden lg:block">
+    <div ref={ref} data-scroll-pin="panels" className="hs relative hidden lg:block">
       <div className="hs-sticky sticky top-0 h-screen overflow-hidden">
         <m.div data-scrub className="hs-track flex h-full" style={{ x: reduce ? 0 : x }}>
           <div className="flex h-full w-[var(--hs-intro)] shrink-0 flex-col justify-center pr-[4vw] pl-[clamp(1.25rem,4.5vw,4.5rem)]">

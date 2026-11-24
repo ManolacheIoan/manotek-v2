@@ -9,7 +9,7 @@ import { fillCompany, plain, privacy } from "@/content/site";
 export const metadata: Metadata = {
   title: plain(privacy.title).replace(/\.$/, ""),
   description: "Cum folosește Manotek datele pe care le trimiți prin formularul de contact sau pe WhatsApp.",
-  alternates: { canonical: "/confidentialitate" },
+  alternates: { canonical: "/confidentialitate/" },
 };
 
 export default function PrivacyPage() {

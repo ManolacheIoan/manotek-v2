@@ -3,6 +3,7 @@
 import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
 import type { ReactNode } from "react";
 import { EASE } from "@/lib/motion";
+import { ScrollStepper } from "../layout/ScrollStepper";
 import { Cursor } from "./Cursor";
 import { SmoothScroll } from "./SmoothScroll";
 
@@ -13,6 +14,7 @@ export function Providers({ children }: { children: ReactNode }) {
         {children}
         <SmoothScroll />
         <Cursor />
+        <ScrollStepper />
       </MotionConfig>
     </LazyMotion>
   );
