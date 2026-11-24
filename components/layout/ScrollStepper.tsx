@@ -42,25 +42,72 @@ function stickyEnd(el: HTMLElement, top: number) {
   return sticky ? top + el.offsetHeight - vh : null;
 }
 
+/** O zonă `data-scroll-pace`: între pozițiile `a` și `b` ale paginii, butonul merge cu `pace` din viteza lui. */
+type Zone = { a: number; b: number; pace: number };
+
 /**
- * Durata unui pas: o secundă plus cam un ecran pe secundă, între 1,5 și 6 secunde.
- * Zonele `data-scroll-pace` se parcurg mai rar: la „0.65”, cu 65% din viteză. Timpul lor în plus
- * se adaugă peste cele 6 s. La o zonă lipicioasă contează doar cât stă pe loc și se animă.
+ * Zonele `data-scroll-pace`, în pixeli de la începutul paginii. La o secțiune lipicioasă (galeria
+ * Serviciilor), cât stă pe loc și se animă; la un bloc obișnuit (principiile), cât trece prin mijlocul ecranului.
  */
-function stepDuration(from: number, to: number) {
+function paceZones(): Zone[] {
   const vh = window.innerHeight;
-  const lo = Math.min(from, to);
-  const hi = Math.max(from, to);
-  let extra = 0;
+  const zones: Zone[] = [];
   document.querySelectorAll<HTMLElement>("[data-scroll-pace]").forEach((el) => {
     const pace = Number(el.dataset.scrollPace);
     if (!(pace > 0 && pace < 1) || !el.offsetHeight) return; // ascunsă (pe mobil) sau fără efect
     const top = el.getBoundingClientRect().top + window.scrollY;
-    const end = stickyEnd(el, top) ?? top + el.offsetHeight;
-    const overlap = Math.min(hi, end) - Math.max(lo, top);
-    if (overlap > 0) extra += (overlap / vh) * (1 / pace - 1);
+    const end = stickyEnd(el, top);
+    zones.push(end === null ? { a: top - vh / 2, b: top + el.offsetHeight - vh / 2, pace } : { a: top, b: end, pace });
   });
-  return Math.min(6, Math.max(1.5, 1 + (hi - lo) / vh)) + extra;
+  return zones;
+}
+
+const smoothstep = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+
+/** Viteza la poziția `y`, față de cea obișnuită: 1 în afara zonelor; la marginile lor coboară și urcă lin, pe `ramp` pixeli. */
+function paceAt(y: number, zones: Zone[], ramp: number) {
+  let pace = 1;
+  for (const z of zones) {
+    const inside = Math.min(smoothstep((y - z.a) / ramp + 0.5), smoothstep((z.b - y) / ramp + 0.5));
+    pace = Math.min(pace, 1 - (1 - z.pace) * inside);
+  }
+  return pace;
+}
+
+/**
+ * Pasul de la `from` la `to`. Durata: o secundă plus cam un ecran pe secundă, între 1,5 și 6 secunde,
+ * plus timpul în plus al zonelor `data-scroll-pace` (o zonă la „0.4” cere de 2,5 ori mai mult timp).
+ * `along` duce progresul mișcării în progres pe pagină: butonul încetinește lin când intră într-o zonă
+ * și își reia viteza după ea, ca un om care citește o listă și apoi derulează mai departe.
+ */
+function plan(from: number, to: number) {
+  const vh = window.innerHeight;
+  const dist = Math.abs(to - from);
+  const zones = to > from ? paceZones() : []; // spre „Sus” fără opriri din ochi
+  // Drumul „cântărit”: un pixel dintr-o zonă la „0.4” contează cât 2,5 pixeli
+  const N = 400;
+  const w = new Float64Array(N + 1);
+  let prev = 1 / paceAt(from, zones, vh / 2);
+  for (let i = 1; i <= N; i++) {
+    const next = 1 / paceAt(from + ((to - from) * i) / N, zones, vh / 2);
+    w[i] = w[i - 1] + ((prev + next) / 2) * (dist / N);
+    prev = next;
+  }
+  const total = w[N];
+  const along = (p: number) => {
+    if (p <= 0 || p >= 1 || !(total > 0)) return Math.min(Math.max(p, 0), 1);
+    const target = p * total;
+    let lo = 0;
+    let hi = N;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >> 1;
+      if (w[mid] < target) lo = mid;
+      else hi = mid;
+    }
+    return (lo + (target - w[lo]) / (w[hi] - w[lo])) / N;
+  };
+  const duration = Math.min(6, Math.max(1.5, 1 + dist / vh)) + (total - dist) / vh;
+  return { duration, along };
 }
 
 /**
@@ -142,8 +189,9 @@ export function ScrollStepper() {
     let target = collectStops(max).find((s) => s > base + 8) ?? max;
     // Dacă după oprire mai rămâne doar o bucată mică de pagină (finalul footerului), mergem până jos
     if (max - target < vh * 0.6) target = max;
-    const duration = stepDuration(window.scrollY, target);
-    scrollToY(target, duration, motion(duration));
+    const { duration, along } = plan(window.scrollY, target);
+    const ease = motion(duration);
+    scrollToY(target, duration, (t) => along(ease(t)));
   };
 
   const { dark, end, scrollable } = view;

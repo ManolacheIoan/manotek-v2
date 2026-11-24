@@ -129,7 +129,9 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
   - Manifestul (`data-scroll-pin`) se face dintr-o singură apăsare: oprirea e la finalul animației, cu fraza complet aprinsă;
   - Despre și Contact (`data-scroll-center`) se opresc cu conținutul la mijlocul ecranului, cu spațiu egal deasupra și dedesubt (la fel și din meniu); unde secțiunea nu încape, Contact arată formularul întreg (`data-scroll-focus`), fără rânduri tăiate la marginea de sus, iar Despre pornește aproape de marginea de sus;
   - mișcarea: pornește încet, trece cu viteză constantă prin conținut, apoi frânează lung (curbă sinusoidală, fără salturi de viteză); o secundă plus cam un ecran pe secundă, între 1,5 și 6 s pe pas; pornirea ține cel mult 1,2 s, frâna cel mult 2 s;
-  - prin panourile Serviciilor (desktop, `data-scroll-pace="0.65"`) merge cu 65% din viteză, cam o secundă pe panou; trecerea durează ~8 s;
+  - zonele `data-scroll-pace` se parcurg mai rar: butonul încetinește lin când intră în zonă (pe o jumătate de ecran) și își reia viteza după ea; timpul în plus se adaugă peste cele 6 s:
+    - panourile Serviciilor (desktop, `data-scroll-pace="0.7"`, cât stă galeria pe loc): 70% din viteză, cam o secundă pe panou; trecerea durează ~7,5 s;
+    - cele cinci principii ale Metodei (`data-scroll-pace="0.4"`, cât trece blocul prin mijlocul ecranului): 40% din viteză; fiecare principiu stă întreg pe ecran ~1,7 s, iar pasul prin Metodă durează ~6,3 s;
   - apăsat în timpul unei derulări, continuă din mers către secțiunea următoare;
   - la finalul paginii devine „Sus”; peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
 

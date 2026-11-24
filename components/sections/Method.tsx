@@ -5,7 +5,10 @@ import { SectionLabel } from "../ui/SectionLabel";
 import { LoopExplainer } from "./LoopExplainer";
 import { StairText } from "../ui/StairText";
 
-/** Metoda: bucla obiceiului (interactivă) și cinci principii, ca listă editorială. */
+/**
+ * Metoda: bucla obiceiului (interactivă) și cinci principii, ca listă editorială.
+ * `data-scroll-pace`: butonul „Derulează” încetinește lin cât principiile trec prin ecran (la 40% din viteză).
+ */
 export function Method() {
   return (
     <section id="metoda" aria-labelledby="metoda-titlu" className="pt-[clamp(5.5rem,3rem+7vw,11rem)]">
@@ -23,7 +26,7 @@ export function Method() {
 
       <LoopExplainer />
 
-      <div className="wrap mt-24 lg:mt-32">
+      <div data-scroll-pace="0.4" className="wrap mt-24 lg:mt-32">
         <div className="grid-page gap-y-6">
           <MaskText as="h3" text={method.principlesTitle} className="col-span-full text-d3 md:col-span-5 lg:col-span-7" />
         </div>
