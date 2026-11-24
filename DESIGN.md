@@ -127,7 +127,7 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
   - mereu vizibil, pe toate paginile; desktop: pastilă în dreapta jos, cu eticheta „Derulează” și linia cu segmentul care coboară; mobil: cerc de 48px în stânga jos (în dreapta e WhatsApp), cu o săgeată;
   - o apăsare = o secțiune: trece lin prin secțiunea curentă și se oprește la începutul următoarei (prima pagină: 11 apăsări);
   - Manifestul (`data-scroll-pin`) se face dintr-o singură apăsare: oprirea e la finalul animației, cu fraza complet aprinsă;
-  - mișcarea: pornește încet, trece cu viteză constantă prin conținut, apoi frânează lung (curbă sinusoidală, fără salturi de viteză); cam un ecran și un sfert pe secundă, între 1,2 și 5 s pe pas;
+  - mișcarea: pornește încet, trece cu viteză constantă prin conținut, apoi frânează lung (curbă sinusoidală, fără salturi de viteză); o secundă plus cam un ecran pe secundă, între 1,5 și 6 s pe pas;
   - apăsat în timpul unei derulări, continuă din mers către secțiunea următoare;
   - la finalul paginii devine „Sus”; peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
 

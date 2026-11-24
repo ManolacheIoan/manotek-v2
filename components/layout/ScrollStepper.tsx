@@ -24,8 +24,8 @@ const NATURAL = (t: number) => cruise(t, 0.22, 0.38);
 /** Apăsat în timpul unei derulări: continuă din mers, fără să mai pornească de pe loc. */
 const CHAINED = (t: number) => cruise(t, 0, 0.4);
 
-/** Durata unui pas: cam un ecran și un sfert pe secundă, între 1,2 și 5 secunde. */
-const stepDuration = (distance: number) => Math.min(5, Math.max(1.2, 0.8 + distance / (window.innerHeight * 1.25)));
+/** Durata unui pas: o secundă plus cam un ecran pe secundă, între 1,5 și 6 secunde. */
+const stepDuration = (distance: number) => Math.min(6, Math.max(1.5, 1 + distance / window.innerHeight));
 
 const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
 
