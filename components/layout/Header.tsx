@@ -48,7 +48,7 @@ export function Header() {
       </a>
       <m.header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-500 ${
-          solid ? "border-rule/80 bg-paper/80 backdrop-blur-md backdrop-saturate-150" : "border-transparent"
+          solid ? "border-rule/80 bg-paper/95 backdrop-blur-md backdrop-saturate-150" : "border-transparent"
         }`}
         animate={{ y: hidden && !open ? "-101%" : "0%" }}
         transition={{ duration: 0.6, ease: EASE }}
@@ -60,7 +60,7 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-6">
             {/* pe ecranele foarte înguste (sub 360px) rămân doar logo-ul și „Meniu” */}
             <span className="max-[359px]:hidden">
-              <Button href={onAudit ? "#cerere" : "/audit-gratuit"} size="sm" variant="outline">
+              <Button href={onAudit ? "#cerere" : "/audit-gratuit"} size="sm">
                 {header.cta}
               </Button>
             </span>
