@@ -8,6 +8,8 @@
   --color-stone: #6b6760;
   --color-rule: #e3ded5;
   --color-ochre: #a8781f;
+  /* auriu închis pentru fundalul butoanelor: contrast 4.7:1 cu textul alb (WCAG AA) */
+  --color-ochre-deep: #976b1b;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;

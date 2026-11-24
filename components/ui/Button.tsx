@@ -8,9 +8,9 @@ import { ArrowRight } from "./Icons";
 
 const variants = {
   /** Auriu cu text alb, pe fundal deschis: la hover urcă negru */
-  primary: { root: "bg-ochre text-white", fill: "bg-ink", copy: "text-paper", icon: "group-hover:text-paper group-focus-visible:text-paper" },
+  primary: { root: "bg-ochre-deep text-white", fill: "bg-ink", copy: "text-paper", icon: "group-hover:text-paper group-focus-visible:text-paper" },
   /** Auriu cu text alb, pe fundal închis: la hover urcă crem, textul devine negru */
-  "primary-dark": { root: "bg-ochre text-white", fill: "bg-paper", copy: "text-ink", icon: "group-hover:text-ink group-focus-visible:text-ink" },
+  "primary-dark": { root: "bg-ochre-deep text-white", fill: "bg-paper", copy: "text-ink", icon: "group-hover:text-ink group-focus-visible:text-ink" },
   /** Contur negru, pe fundal deschis */
   outline: { root: "border border-ink/80 text-ink", fill: "bg-ink", copy: "text-paper", icon: "group-hover:text-paper group-focus-visible:text-paper" },
   /** Contur crem, pe fundal închis */

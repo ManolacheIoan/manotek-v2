@@ -29,7 +29,8 @@ Principii:
 | Text | `ink` | `#141414` | Text principal; fundalul capitolelor închise |
 | Text secundar | `stone` | `#6B6760` | Paragrafe secundare, etichete |
 | Linii | `rule` | `#E3DED5` | Separatoare fine, chenare |
-| Accent | `ochre` | `#A8781F` | Buton principal, cuvinte în italic, linii active |
+| Accent | `ochre` | `#A8781F` | Cuvinte în italic, linii active |
+| Accent închis | `ochre-deep` | `#976B1B` | Fundalul butonului principal (text alb) |
 
 Capitolele închise (Manifestul, Finalul și Footer-ul) folosesc `ink` ca fundal, `paper` pentru text și `paper` la 62% opacitate pentru textul secundar.
 
@@ -43,7 +44,7 @@ Capitolele închise (Manifestul, Finalul și Footer-ul) folosesc `ink` ca fundal
 | stone pe sand | 4,8 : 1 | text normal (AA) |
 | ochre pe paper | 3,1 : 1 | **doar text mare (≥ 24px) sau elemente grafice** |
 | ochre pe sand | 2,8 : 1 | **doar decorativ, fără text** |
-| ink pe ochre | 5,6 : 1 | eticheta butonului principal |
+| alb pe ochre-deep | 4,7 : 1 | eticheta butonului principal |
 | ochre pe ink | 5,6 : 1 | text în capitolele închise |
 | paper 62% pe ink | ≈ 7 : 1 | text secundar pe fundal închis |
 
@@ -100,7 +101,7 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
 ## 5. Componente de bază
 
 - **Wordmark:** „Mano*tek*” în Fraunces 400, cu „tek” în italic.
-- **Buton principal:** pastilă `ochre` cu text `ink`. La hover, un strat `ink` urcă de jos, iar textul alunecă în sus și e înlocuit de o copie `paper`. Are efect magnetic subtil pe desktop.
+- **Buton principal:** pastilă `ochre-deep` cu text alb. La hover, un strat `ink` urcă de jos, iar textul alunecă în sus și e înlocuit de o copie `paper`. Are efect magnetic subtil pe desktop.
 - **Buton secundar:** pastilă cu chenar `ink` de 1px. Are același hover: umplere `ink` și text `paper`.
 - **Link:** subliniere care se desenează de la stânga la dreapta (`scaleX`). În paragrafe, linkurile au și o linie statică, ca să nu depindă doar de culoare.
 - **Header:**
