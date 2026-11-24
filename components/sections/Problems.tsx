@@ -6,7 +6,10 @@ import { SectionLabel } from "../ui/SectionLabel";
 import { TextLink } from "../ui/TextLink";
 import { StairText } from "../ui/StairText";
 
-/** Problema: trei rânduri editoriale mari, numerotate, separate de linii care se desenează. */
+/**
+ * Problema: trei rânduri editoriale mari, numerotate, separate de linii care se desenează.
+ * `data-scroll-pace`: butonul „Derulează” încetinește lin cât cele trei situații trec prin ecran (la 40% din viteză).
+ */
 export function Problems() {
   return (
     <section id="problema" aria-labelledby="problema-titlu" className="pt-[clamp(5.5rem,3rem+7vw,11rem)] pb-14 lg:pb-20">
@@ -19,7 +22,7 @@ export function Problems() {
         />
       </div>
 
-      <div className="wrap mt-[clamp(5.5rem,3rem+7vw,11rem)]">
+      <div data-scroll-pace="0.4" className="wrap mt-[clamp(5.5rem,3rem+7vw,11rem)]">
       <ol>
         {problems.items.map((item, i) => (
           <li key={item.title} className="relative">
