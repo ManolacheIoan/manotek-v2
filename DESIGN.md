@@ -129,11 +129,13 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
   - Manifestul (`data-scroll-pin`) se face dintr-o singură apăsare: oprirea e la finalul animației, cu fraza complet aprinsă;
   - Despre și Contact (`data-scroll-center`) se opresc cu conținutul la mijlocul ecranului, cu spațiu egal deasupra și dedesubt (la fel și din meniu); unde secțiunea nu încape, Contact arată formularul întreg (`data-scroll-focus`), fără rânduri tăiate la marginea de sus, iar Despre pornește aproape de marginea de sus;
   - mișcarea: pornește încet, trece cu viteză constantă prin conținut, apoi frânează lung (curbă sinusoidală, fără salturi de viteză); o secundă plus cam un ecran pe secundă, între 1,5 și 6 s pe pas; pornirea ține cel mult 1,2 s, frâna cel mult 2 s;
-  - zonele `data-scroll-pace` se parcurg mai rar: butonul încetinește lin când intră în zonă (pe o jumătate de ecran) și își reia viteza după ea; timpul în plus se adaugă peste cele 6 s:
-    - panourile Serviciilor (desktop, `data-scroll-pace="0.7"`, cât stă galeria pe loc): 70% din viteză, cam o secundă pe panou; trecerea durează ~7,5 s;
-    - cele cinci principii ale Metodei (`data-scroll-pace="0.4"`, cât trece blocul prin mijlocul ecranului): 40% din viteză; fiecare principiu stă întreg pe ecran ~1,7 s, iar pasul prin Metodă durează ~6,3 s;
+  - zonele `data-scroll-pace` se parcurg mai rar: butonul încetinește lin când blocul ajunge la mijlocul ecranului (o secțiune lipicioasă: când se fixează) și își reia viteza după ce marginea lui de jos trece de mijloc; trecerile țin o jumătate de ecran, iar timpul în plus se adaugă peste cele 6 s. Unde zonele se cuprind una pe alta, contează cea mai lentă. Dacă blocul lent e ultimul dinaintea opririi, butonul nu mai accelerează după el, ci frânează direct din viteza lui. Duratele, la 1440×900:
+    - cele trei situații din Provocări (`data-scroll-pace="0.4"`): 40% din viteză; fiecare stă întreagă pe ecran ~1,5–1,9 s; pasul durează ~4,4 s;
+    - galeria Serviciilor (desktop, `data-scroll-pace="0.55"`): 55% din viteză, ~1,4 s pe panou; pasul durează ~10 s;
+    - Metoda (`data-scroll-pace="0.6"`, pe secțiune): 60% din viteză; cele cinci principii (`data-scroll-pace="0.4"`): 40%, fiecare întreg pe ecran ~1,8 s; pasul durează ~8,4 s;
+    - pachetele (`data-scroll-pace="0.6"`, pe grila cu pachete): 60% din viteză; pasul durează ~3,2 s;
   - apăsat în timpul unei derulări, continuă din mers către secțiunea următoare;
-  - la finalul paginii devine „Sus”; peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
+  - la finalul paginii devine „Sus”: aceeași mărime, cu cuvântul la mijloc (pe mobil, în locul săgeții); peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
 
 ---
 

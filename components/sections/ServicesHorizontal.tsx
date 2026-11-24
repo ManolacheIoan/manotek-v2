@@ -15,7 +15,7 @@ const DISTANCE_VW = 260;
 
 /**
  * Desktop: secțiune lipicioasă; panourile defilează lateral la scroll vertical.
- * `data-scroll-pace`: butonul „Derulează” trece prin panouri cu 70% din viteza lui obișnuită, cam o secundă pe panou.
+ * `data-scroll-pace`: butonul „Derulează” trece prin panouri cu 55% din viteza lui obișnuită, cam 1,4 s pe panou.
  */
 export function ServicesHorizontal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ export function ServicesHorizontal() {
   const total = services.items.length;
 
   return (
-    <div ref={ref} data-scroll-pace="0.7" className="hs relative hidden lg:block">
+    <div ref={ref} data-scroll-pace="0.55" className="hs relative hidden lg:block">
       <div className="hs-sticky sticky top-0 h-screen overflow-hidden">
         <m.div data-scrub className="hs-track flex h-full" style={{ x: reduce ? 0 : x }}>
           <div className="flex h-full w-[var(--hs-intro)] shrink-0 flex-col justify-center pr-[4vw] pl-[clamp(1.25rem,4.5vw,4.5rem)]">

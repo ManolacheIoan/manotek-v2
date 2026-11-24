@@ -72,7 +72,10 @@ function PlanColumn({ plan, index, reduce }: { plan: Plan; index: number; reduce
   );
 }
 
-/** Pachete: comutator „O singură plată / Abonament lunar”, cu tranziție animată. */
+/**
+ * Pachete: comutator „O singură plată / Abonament lunar”, cu tranziție animată.
+ * `data-scroll-pace`: butonul „Derulează” trece prin pachete cu 60% din viteză.
+ */
 export function Pricing() {
   const [active, setActive] = useState(0);
   const reduce = useReducedMotionPref();
@@ -133,7 +136,7 @@ export function Pricing() {
       </div>
 
       <Reveal variant="rise" className="wrap mt-[clamp(4rem,2.5rem+5vw,8rem)]">
-        <div className="grid border-t border-ink/80">
+        <div data-scroll-pace="0.6" className="grid border-t border-ink/80">
           {pricing.groups.map((g, gi) => {
             const on = gi === active;
             return (

@@ -7,11 +7,11 @@ import { StairText } from "../ui/StairText";
 
 /**
  * Metoda: bucla obiceiului (interactivă) și cinci principii, ca listă editorială.
- * `data-scroll-pace`: butonul „Derulează” încetinește lin cât principiile trec prin ecran (la 40% din viteză).
+ * `data-scroll-pace`: butonul „Derulează” trece prin secțiune cu 60% din viteză, iar prin principii cu 40%.
  */
 export function Method() {
   return (
-    <section id="metoda" aria-labelledby="metoda-titlu" className="pt-[clamp(5.5rem,3rem+7vw,11rem)]">
+    <section id="metoda" data-scroll-pace="0.6" aria-labelledby="metoda-titlu" className="pt-[clamp(5.5rem,3rem+7vw,11rem)]">
       <div className="wrap grid-page gap-y-8">
         <SectionLabel className="col-span-full lg:col-span-2 lg:pt-6">{method.label}</SectionLabel>
         <MaskText id="metoda-titlu" text={method.title} className="col-span-full text-d2 md:col-span-6 lg:col-span-9 lg:col-start-3" />

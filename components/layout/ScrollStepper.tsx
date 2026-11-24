@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { scrollStep } from "@/content/site";
-import { centeredStop, isHeading, scrollTarget, scrollToY } from "@/lib/scroll";
+import { centeredStop, isHeading, pageSpan, scrollTarget, scrollToY } from "@/lib/scroll";
 import { ArrowRight } from "../ui/Icons";
 
 /**
@@ -46,8 +46,10 @@ function stickyEnd(el: HTMLElement, top: number) {
 type Zone = { a: number; b: number; pace: number };
 
 /**
- * Zonele `data-scroll-pace`, în pixeli de la începutul paginii. La o secțiune lipicioasă (galeria
- * Serviciilor), cât stă pe loc și se animă; la un bloc obișnuit (principiile), cât trece prin mijlocul ecranului.
+ * Zonele `data-scroll-pace`, în pixeli de la începutul paginii. Încep când blocul ajunge la mijlocul
+ * ecranului (o secțiune lipicioasă, ca galeria Serviciilor: când se fixează) și se termină când
+ * marginea lui de jos trece de mijlocul ecranului.
+ * Zonele se pot cuprinde una pe alta (principiile, în Metodă): contează cea mai lentă.
  */
 function paceZones(): Zone[] {
   const vh = window.innerHeight;
@@ -55,9 +57,9 @@ function paceZones(): Zone[] {
   document.querySelectorAll<HTMLElement>("[data-scroll-pace]").forEach((el) => {
     const pace = Number(el.dataset.scrollPace);
     if (!(pace > 0 && pace < 1) || !el.offsetHeight) return; // ascunsă (pe mobil) sau fără efect
-    const top = el.getBoundingClientRect().top + window.scrollY;
-    const end = stickyEnd(el, top);
-    zones.push(end === null ? { a: top - vh / 2, b: top + el.offsetHeight - vh / 2, pace } : { a: top, b: end, pace });
+    const [top, bottom] = pageSpan(el); // fără transformările animațiilor de intrare
+    const sticky = stickyEnd(el, top) !== null;
+    zones.push({ a: sticky ? top : top - vh / 2, b: bottom - vh / 2, pace });
   });
   return zones;
 }
@@ -84,6 +86,9 @@ function plan(from: number, to: number) {
   const vh = window.innerHeight;
   const dist = Math.abs(to - from);
   const zones = to > from ? paceZones() : []; // spre „Sus” fără opriri din ochi
+  // Blocul lent e ultimul dinaintea opririi (se termină cu cel mult ~0,3 ecrane înainte): butonul nu mai
+  // accelerează după el, ci frânează direct din viteza lui, până la oprire
+  for (const z of zones) if (z.b < to && to - z.b < vh * 0.8) z.b = to + vh / 4;
   // Drumul „cântărit”: un pixel dintr-o zonă la „0.4” contează cât 2,5 pixeli
   const N = 400;
   const w = new Float64Array(N + 1);
@@ -137,7 +142,8 @@ function collectStops(max: number) {
 
 /**
  * Butonul „Derulează”, mereu vizibil: la fiecare apăsare trece lin prin secțiunea curentă și
- * se oprește la următoarea, ca un scroll făcut de mână. La finalul paginii devine „Sus”.
+ * se oprește la următoarea, ca un scroll făcut de mână. La finalul paginii devine „Sus”:
+ * aceeași mărime, cu cuvântul la mijloc.
  * Desktop: pastilă în dreapta jos. Mobil: cerc în stânga jos (în dreapta e WhatsApp).
  */
 export function ScrollStepper() {
@@ -203,19 +209,26 @@ export function ScrollStepper() {
       onClick={onClick}
       aria-label={end ? scrollStep.ariaTop : scrollStep.aria}
       style={{ "--d": "1400ms" } as CSSProperties}
-      className={`hero-fade fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-40 flex h-12 min-w-12 items-center justify-center gap-3 rounded-full border backdrop-blur transition-[background-color,border-color,color,opacity] duration-500 md:right-[clamp(1.25rem,4.5vw,4.5rem)] md:bottom-8 md:left-auto md:px-5 ${
+      className={`hero-fade fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-40 grid h-12 min-w-12 place-items-center rounded-full border backdrop-blur transition-[background-color,border-color,color,opacity] duration-500 md:right-[clamp(1.25rem,4.5vw,4.5rem)] md:bottom-8 md:left-auto md:px-5 ${
         dark ? "border-paper/20 bg-ink/80 text-paper hover:border-paper/50" : "border-rule bg-paper/90 text-ink hover:border-ink/40"
       } ${scrollable ? "" : "pointer-events-none opacity-0"}`}
     >
-      <span className="label hidden md:inline">{end ? scrollStep.labelTop : scrollStep.label}</span>
-      <ArrowRight
-        className={`size-[18px] transition-transform duration-500 md:hidden ${end ? "-rotate-90" : "rotate-90"}`}
-      />
+      {/* Cele două fețe stau în aceeași celulă: butonul își păstrează mărimea, iar la final „Sus” apare la mijloc */}
       <span
         aria-hidden="true"
-        className={`relative hidden h-5 w-px overflow-hidden transition-transform duration-500 md:block ${dark ? "bg-paper/25" : "bg-ink/15"} ${end ? "rotate-180" : ""}`}
+        className={`col-start-1 row-start-1 flex items-center gap-3 transition-opacity duration-500 ${end ? "opacity-0" : ""}`}
       >
-        <span className="scroll-cue absolute inset-x-0 top-0 block h-1/3 bg-current" />
+        <span className="label hidden md:inline">{scrollStep.label}</span>
+        <ArrowRight className="size-[18px] rotate-90 md:hidden" />
+        <span className={`relative hidden h-5 w-px overflow-hidden md:block ${dark ? "bg-paper/25" : "bg-ink/15"}`}>
+          <span className="scroll-cue absolute inset-x-0 top-0 block h-1/3 bg-current" />
+        </span>
+      </span>
+      <span
+        aria-hidden="true"
+        className={`label col-start-1 row-start-1 transition-opacity duration-500 ${end ? "" : "opacity-0"}`}
+      >
+        {scrollStep.labelTop}
       </span>
     </button>
   );
