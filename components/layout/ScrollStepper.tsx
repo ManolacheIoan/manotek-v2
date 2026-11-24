@@ -1,64 +1,55 @@
 "use client";
 
-import { cubicBezier } from "framer-motion";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { scrollStep } from "@/content/site";
-import { ArrowRight } from "../ui/Icons";
 import { isHeading, scrollTarget, scrollToY } from "@/lib/scroll";
+import { ArrowRight } from "../ui/Icons";
 
-/** Curba unui scroll făcut de mână: pornește lin, accelerează, apoi frânează lung. */
-const NATURAL = cubicBezier(0.33, 0.1, 0.15, 1);
-/** Pentru o apăsare în timpul unei derulări: continuă din viteză, fără să mai pornească lent. */
-const CHAINED = cubicBezier(0.2, 0.55, 0.15, 1);
+/**
+ * Mișcarea unui scroll lin, ca făcut cu mâna: pornește încet (`a`, partea din timp în care
+ * accelerează), trece cu viteză constantă prin conținut, apoi încetinește lung (`d`) până la oprire.
+ * Viteza nu sare niciodată: urcă și coboară după o curbă sinusoidală.
+ */
+function cruise(t: number, a: number, d: number) {
+  if (t <= 0) return 0;
+  if (t >= 1) return 1;
+  const v = 1 / (1 - (a + d) / 2); // viteza de croazieră, ca drumul total să fie 1
+  if (a > 0 && t < a) return v * (t / 2 - (a / (2 * Math.PI)) * Math.sin((Math.PI * t) / a));
+  if (t <= 1 - d) return v * (a / 2 + (t - a));
+  const u = t - (1 - d);
+  return v * (a / 2 + (1 - a - d) + u / 2 + (d / (2 * Math.PI)) * Math.sin((Math.PI * u) / d));
+}
+
+const NATURAL = (t: number) => cruise(t, 0.22, 0.38);
+/** Apăsat în timpul unei derulări: continuă din mers, fără să mai pornească de pe loc. */
+const CHAINED = (t: number) => cruise(t, 0, 0.4);
+
+/** Durata unui pas: cam un ecran și un sfert pe secundă, între 1,2 și 5 secunde. */
+const stepDuration = (distance: number) => Math.min(5, Math.max(1.2, 0.8 + distance / (window.innerHeight * 1.25)));
 
 const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
 
 /**
- * Secțiunile lipicioase active pe ecranul curent (Manifest, Serviciile pe desktop): conținutul
- * stă pe loc și se animă cât derulezi. Cu mișcare redusă devin secțiuni obișnuite.
+ * Secțiune lipicioasă (`data-scroll-pin`, Manifestul): textul stă pe loc și se aprinde cât derulezi.
+ * Oprirea e la finalul animației, ca fraza să apară întreagă dintr-o singură apăsare.
+ * Cu mișcare redusă devine o secțiune obișnuită.
  */
-function pinnedSections() {
+function pinEnd(el: HTMLElement, top: number) {
   const vh = window.innerHeight;
-  return Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-pin]")).filter((el) => {
-    const child = el.firstElementChild;
-    return el.offsetHeight > vh + 10 && !!child && getComputedStyle(child).position === "sticky";
-  });
+  const child = el.firstElementChild;
+  const pinned = el.dataset.scrollPin !== undefined && el.offsetHeight > vh + 10 && !!child && getComputedStyle(child).position === "sticky";
+  return pinned ? top + el.offsetHeight - vh : null;
 }
 
-/**
- * Opririle butonului, în pixeli de la începutul paginii:
- * - începutul fiecărei secțiuni (și al footerului);
- * - pașii marcați cu `data-scroll-stop`: sus (implicit) sau „center” (la mijlocul ecranului);
- * - finalul fiecărei secțiuni lipicioase (animația ei s-a terminat), iar la Servicii
- *   câte un pas pe panou (scroll-ul vertical mută panourile 1:1 pe orizontală).
- */
+/** Opririle butonului: câte una pe secțiune (și footerul), în pixeli de la începutul paginii. */
 function collectStops(max: number) {
   const vh = window.innerHeight;
   const y = window.scrollY;
   const stops: number[] = [];
-
-  document.querySelectorAll("main > section, main > article, main ~ footer").forEach((el) => {
-    stops.push(el.getBoundingClientRect().top + y);
+  document.querySelectorAll<HTMLElement>("main > section, main > article, main ~ footer").forEach((el) => {
+    const top = el.getBoundingClientRect().top + y;
+    stops.push(pinEnd(el, top) ?? top);
   });
-
-  document.querySelectorAll<HTMLElement>("[data-scroll-stop]").forEach((el) => {
-    if (!el.getClientRects().length) return; // ascuns pe ecranul curent
-    const r = el.getBoundingClientRect();
-    if (el.dataset.scrollStop === "center") stops.push(r.top + y + r.height / 2 - vh / 2);
-    else stops.push(r.top + y - vh * 0.12);
-  });
-
-  for (const el of pinnedSections()) {
-    const start = el.getBoundingClientRect().top + y;
-    const distance = el.offsetHeight - vh;
-    stops.push(start + distance);
-    if (el.dataset.scrollPin === "panels") {
-      const gutter = Math.min(Math.max(20, window.innerWidth * 0.045), 72);
-      el.querySelectorAll<HTMLElement>("article").forEach((panel) => {
-        stops.push(start + Math.min(Math.max(panel.offsetLeft - gutter, 0), distance));
-      });
-    }
-  }
 
   // În ordine, în limitele paginii; din două opriri foarte apropiate o păstrăm pe a doua
   const sorted = stops.map((s) => Math.round(Math.min(Math.max(s, 0), max))).sort((a, b) => a - b);
@@ -70,27 +61,9 @@ function collectStops(max: number) {
   return out;
 }
 
-/** Drumul dintre două poziții rămâne în aceeași secțiune lipicioasă? */
-function insidePinned(from: number, to: number) {
-  const y = window.scrollY;
-  const vh = window.innerHeight;
-  return pinnedSections().some((el) => {
-    const top = el.getBoundingClientRect().top + y;
-    return from >= top - 4 && to <= top + el.offsetHeight - vh + 4;
-  });
-}
-
-/** Următoarea oprire; în secțiunile lungi, cel mult cam un ecran pe pas, ca să nu sară peste conținut. */
-function nextStop(base: number, max: number) {
-  const vh = window.innerHeight;
-  const next = collectStops(max).find((s) => s > base + 8) ?? max;
-  if (next - base > vh * 1.15 && !insidePinned(base, next)) return Math.min(base + vh * 0.85, max);
-  return next;
-}
-
 /**
- * Butonul „Derulează”, mereu vizibil: la fiecare apăsare coboară lin la secțiunea următoare,
- * ca un scroll făcut de mână. La finalul paginii devine „Sus”.
+ * Butonul „Derulează”, mereu vizibil: la fiecare apăsare trece lin prin secțiunea curentă și
+ * se oprește la începutul următoarei, ca un scroll făcut de mână. La finalul paginii devine „Sus”.
  * Desktop: pastilă în dreapta jos. Mobil: cerc în stânga jos (în dreapta e WhatsApp).
  */
 export function ScrollStepper() {
@@ -132,15 +105,16 @@ export function ScrollStepper() {
   const onClick = () => {
     const vh = window.innerHeight;
     const max = maxScroll();
-    const chained = isHeading();
+    const easing = isHeading() ? CHAINED : NATURAL;
     const base = scrollTarget();
-    const easing = chained ? CHAINED : NATURAL;
     if (base >= max - 4) {
-      scrollToY(0, Math.min(2.4, 1 + (base / vh) * 0.08), easing);
+      scrollToY(0, Math.min(3, Math.max(1.5, 1.2 + window.scrollY / (vh * 6))), easing);
       return;
     }
-    const target = nextStop(base, max);
-    scrollToY(target, Math.min(1.6, 0.7 + (Math.abs(target - window.scrollY) / vh) * 0.4), easing);
+    let target = collectStops(max).find((s) => s > base + 8) ?? max;
+    // Dacă după oprire mai rămâne doar o bucată mică de pagină (finalul footerului), mergem până jos
+    if (max - target < vh * 0.6) target = max;
+    scrollToY(target, stepDuration(Math.abs(target - window.scrollY)), easing);
   };
 
   const { dark, end, scrollable } = view;

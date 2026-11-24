@@ -125,9 +125,10 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
   - apare după hero și dispare în secțiunea de contact.
 - **Butonul „Derulează” (`ScrollStepper`):**
   - mereu vizibil, pe toate paginile; desktop: pastilă în dreapta jos, cu eticheta „Derulează” și linia cu segmentul care coboară; mobil: cerc de 48px în stânga jos (în dreapta e WhatsApp), cu o săgeată;
-  - la fiecare apăsare coboară lin la secțiunea următoare (Lenis, curbă care pornește lin și frânează lung, ~0,9–1,6 s după distanță); în secțiunile mai lungi de un ecran avansează cel mult ~85% de ecran pe pas, ca să nu sară peste conținut;
-  - opriri speciale: finalul Manifestului (fraza complet aprinsă), câte un panou la Serviciile orizontale, fiecare etapă a buclei obiceiului pe desktop (`data-scroll-stop="center"`) și titlul „Cinci principii” (`data-scroll-stop`); secțiunile lipicioase se marchează cu `data-scroll-pin`;
-  - apăsat de mai multe ori la rând, continuă din viteză către opririle următoare;
+  - o apăsare = o secțiune: trece lin prin secțiunea curentă și se oprește la începutul următoarei (prima pagină: 11 apăsări);
+  - Manifestul (`data-scroll-pin`) se face dintr-o singură apăsare: oprirea e la finalul animației, cu fraza complet aprinsă;
+  - mișcarea: pornește încet, trece cu viteză constantă prin conținut, apoi frânează lung (curbă sinusoidală, fără salturi de viteză); cam un ecran și un sfert pe secundă, între 1,2 și 5 s pe pas;
+  - apăsat în timpul unei derulări, continuă din mers către secțiunea următoare;
   - la finalul paginii devine „Sus”; peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
 
 ---

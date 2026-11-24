@@ -73,7 +73,6 @@ export function LoopExplainer() {
               <li
                 key={s.label}
                 data-step={i}
-                data-scroll-stop={desktop ? "center" : undefined}
                 onPointerEnter={(e) => e.pointerType === "mouse" && desktop && setActive(i)}
                 className="relative border-t border-rule py-7 lg:flex lg:min-h-[46vh] lg:flex-col lg:justify-center lg:border-t-0 lg:py-0"
               >
