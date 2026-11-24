@@ -87,7 +87,7 @@ export function Pricing() {
   };
 
   return (
-    <section id="pachete" aria-labelledby="pachete-titlu" className="bg-sand py-[clamp(4rem,2.5rem+5vw,8rem)]">
+    <section id="pachete" aria-labelledby="pachete-titlu" className="bg-sand pt-[clamp(4rem,2.5rem+5vw,8rem)] pb-8 lg:pb-10">
       <div className="wrap grid-page gap-y-10">
         <div className="col-span-full md:col-span-6 lg:col-span-7">
           <SectionLabel>{pricing.label}</SectionLabel>
@@ -156,7 +156,7 @@ export function Pricing() {
             );
           })}
         </div>
-        <p className="mt-4 border-t border-ink/10 pt-6 text-body">{pricing.note}</p>
+        <p className="mt-4 border-t border-ink/10 pt-8 text-body lg:pt-10">{pricing.note}</p>
       </Reveal>
     </section>
   );
