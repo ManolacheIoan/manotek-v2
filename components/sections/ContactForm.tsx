@@ -86,7 +86,12 @@ function Field({
   );
 }
 
-export function ContactForm() {
+type Props = {
+  /** Clase în plus pentru nota de confidențialitate (pe prima pagină îi face loc butonului „Derulează”). */
+  noteClassName?: string;
+};
+
+export function ContactForm({ noteClassName = "" }: Props) {
   const [values, setValues] = useState<Fields>(empty);
   const [errors, setErrors] = useState<Partial<Record<keyof Fields, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "sent-formspree">("idle");
@@ -174,26 +179,27 @@ export function ContactForm() {
         <Button type="submit" variant="primary-dark" arrow disabled={status === "sending"}>
           {status === "sending" ? f.sending : f.submit}
         </Button>
-        <p id="cf-privacy" className="mt-6 max-w-[36rem] text-small text-pretty text-paper/62">
+        <p id="cf-privacy" className={`mt-6 max-w-[36rem] text-small text-pretty text-paper/62 ${noteClassName}`}>
           {f.privacy}{" "}
           <TextLink href="/confidentialitate" staticLine className="text-paper">
             {f.privacyLink}
           </TextLink>
           .
         </p>
-      </div>
 
-      <div role="status" aria-live="polite">
-        {status === "sent" ? (
-          <p className="border-l border-ochre pl-5 text-body text-paper/80">
-            {f.success}{" "}
-            <a href={`mailto:${site.email}`} className="u-link u-link--static text-paper">
-              {site.email}
-            </a>
-            .
-          </p>
-        ) : null}
-        {status === "sent-formspree" ? <p className="border-l border-ochre pl-5 text-body text-paper/80">{f.successFormspree}</p> : null}
+        {/* Cât e gol nu ocupă loc: formularul se termină la notă, ca secțiunea să se poată centra exact */}
+        <div role="status" aria-live="polite">
+          {status === "sent" ? (
+            <p className="mt-7 border-l border-ochre pl-5 text-body text-paper/80">
+              {f.success}{" "}
+              <a href={`mailto:${site.email}`} className="u-link u-link--static text-paper">
+                {site.email}
+              </a>
+              .
+            </p>
+          ) : null}
+          {status === "sent-formspree" ? <p className="mt-7 border-l border-ochre pl-5 text-body text-paper/80">{f.successFormspree}</p> : null}
+        </div>
       </div>
     </form>
   );
