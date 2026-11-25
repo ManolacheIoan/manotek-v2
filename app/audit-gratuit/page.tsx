@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import type { CSSProperties } from "react";
 import { CssMaskText } from "@/components/motion/CssMaskText";
 import { Reveal } from "@/components/motion/Reveal";
@@ -57,7 +56,7 @@ export default function AuditPage() {
               className="hero-in col-span-full md:col-span-6 lg:sticky lg:top-28 lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:self-start"
               style={{ "--d": "300ms" } as CSSProperties}
             >
-              <div id="cerere" data-theme="dark" data-hide-wa className="bg-ink p-7 text-paper sm:p-10">
+              <div id="cerere" data-theme="dark" className="bg-ink p-7 text-paper sm:p-10">
                 <h2 className="font-serif text-t1 font-light">{auditPage.formTitle}</h2>
                 <p className="mt-3 max-w-[30rem] text-body text-balance text-paper/62">{auditPage.formIntro}</p>
                 <div className="mt-8">
@@ -134,7 +133,6 @@ export default function AuditPage() {
         <Faq id="intrebari-audit" label={faq.label} title={auditPage.faqTitle} intro={faq.intro} items={questions} />
       </main>
       <Footer />
-      <WhatsAppFloat />
     </>
   );
 }

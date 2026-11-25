@@ -6,7 +6,7 @@ import { FooterWordmark } from "./FooterWordmark";
 export function Footer() {
   const c = site.company;
   return (
-    <footer data-theme="dark" data-hide-wa className="bg-ink text-paper">
+    <footer data-theme="dark" className="bg-ink text-paper">
       <div className="wrap grid-page gap-y-12 border-t border-paper/12 pt-20 pb-14 lg:pt-24">
         <div className="col-span-full lg:col-span-4">
           <p className="font-serif text-t1 font-light italic">{site.tagline}</p>

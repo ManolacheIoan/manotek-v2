@@ -119,12 +119,8 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
   - doar pe desktop (`hover: hover` și `pointer: fine`);
   - un punct de 8px care devine un cerc de 56px peste elementele interactive și dispare peste câmpurile de text;
   - pe secțiunile închise își inversează culoarea.
-- **WhatsApp plutitor:**
-  - doar pe mobil;
-  - cerc de 48px `paper`, chenar `rule` și simbol `ink`;
-  - apare după hero și dispare în secțiunea de contact.
 - **Butonul „Derulează” (`ScrollStepper`):**
-  - mereu vizibil, pe toate paginile; desktop: pastilă în dreapta jos, cu eticheta „Derulează” și linia cu segmentul care coboară; mobil: cerc de 48px în stânga jos (în dreapta e WhatsApp), cu o săgeată;
+  - mereu vizibil, pe toate paginile; desktop: pastilă în dreapta jos, cu eticheta „Derulează” și linia cu segmentul care coboară; mobil: cerc de 48px în dreapta jos, cu o săgeată (pe mobil nu mai există butonul WhatsApp plutitor; WhatsApp rămâne în meniu, la Contact și în footer);
   - o apăsare = o secțiune: trece lin prin secțiunea curentă și se oprește la începutul următoarei (prima pagină: 11 apăsări);
   - Manifestul (`data-scroll-pin`) se face dintr-o singură apăsare: oprirea e la finalul animației, cu fraza complet aprinsă;
   - Despre și Contact (`data-scroll-center`) se opresc cu conținutul la mijlocul ecranului, cu spațiu egal deasupra și dedesubt (la fel și din meniu); unde secțiunea nu încape, Contact arată formularul întreg (`data-scroll-focus`), fără rânduri tăiate la marginea de sus, iar Despre pornește aproape de marginea de sus;

@@ -17,7 +17,6 @@ export function Contact() {
     <section
       id="contact"
       data-theme="dark"
-      data-hide-wa
       data-scroll-center
       aria-labelledby="contact-titlu"
       className="bg-ink py-[clamp(5.5rem,3rem+7vw,11rem)] text-paper"

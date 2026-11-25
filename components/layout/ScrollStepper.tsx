@@ -144,7 +144,7 @@ function collectStops(max: number) {
  * Butonul „Derulează”, mereu vizibil: la fiecare apăsare trece lin prin secțiunea curentă și
  * se oprește la următoarea, ca un scroll făcut de mână. La finalul paginii devine „Sus”:
  * aceeași mărime, cu cuvântul la mijloc.
- * Desktop: pastilă în dreapta jos. Mobil: cerc în stânga jos (în dreapta e WhatsApp).
+ * Desktop: pastilă în dreapta jos. Mobil: cerc în dreapta jos.
  */
 export function ScrollStepper() {
   const ref = useRef<HTMLButtonElement>(null);
@@ -209,7 +209,7 @@ export function ScrollStepper() {
       onClick={onClick}
       aria-label={end ? scrollStep.ariaTop : scrollStep.aria}
       style={{ "--d": "1400ms" } as CSSProperties}
-      className={`hero-fade fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-40 grid h-12 min-w-12 place-items-center rounded-full border backdrop-blur transition-[background-color,border-color,color,opacity] duration-500 md:right-[clamp(1.25rem,4.5vw,4.5rem)] md:bottom-8 md:left-auto md:px-5 ${
+      className={`hero-fade fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 grid h-12 min-w-12 place-items-center rounded-full border backdrop-blur transition-[background-color,border-color,color,opacity] duration-500 md:right-[clamp(1.25rem,4.5vw,4.5rem)] md:bottom-8 md:px-5 ${
         dark ? "border-paper/20 bg-ink/80 text-paper hover:border-paper/50" : "border-rule bg-paper/90 text-ink hover:border-ink/40"
       } ${scrollable ? "" : "pointer-events-none opacity-0"}`}
     >
