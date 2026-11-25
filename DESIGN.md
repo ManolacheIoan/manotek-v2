@@ -129,7 +129,8 @@ Textul de corp are minimum 17px, pentru un public de 35–60 de ani. Paragrafele
     - cele trei situații din Provocări (`data-scroll-pace="0.4"`): 40% din viteză; fiecare stă întreagă pe ecran ~1,5–1,9 s; pasul durează ~4,4 s;
     - galeria Serviciilor (desktop, `data-scroll-pace="0.55"`): 55% din viteză, ~1,4 s pe panou; pasul durează ~10 s;
     - Metoda (`data-scroll-pace="0.6"`, pe secțiune): 60% din viteză; cele cinci principii (`data-scroll-pace="0.4"`): 40%, fiecare întreg pe ecran ~1,8 s; pasul durează ~8,4 s;
-    - pachetele (`data-scroll-pace="0.6"`, pe grila cu pachete): 60% din viteză; pasul durează ~3,2 s;
+    - cei patru pași din Cum lucrăm (`data-scroll-pace="0.35"`): 35% din viteză; pașii 3 și 4, care la oprire sunt sub ecran, stau întregi pe ecran ~1,8–2 s; pasul durează ~4,8 s;
+    - pachetele (`data-scroll-pace="0.3"`, pe grila cu pachete): 30% din viteză, ~0,35 ecrane/s, ca fiecare rând să stea ~2,5 s pe ecran; pasul durează ~5,2 s (pe mobil, cu pachetele unul sub altul, ~9 s);
   - apăsat în timpul unei derulări, continuă din mers către secțiunea următoare;
   - la finalul paginii devine „Sus”: aceeași mărime, cu cuvântul la mijloc (pe mobil, în locul săgeții); peste secțiunile `ink` își inversează culorile; cu mișcare redusă sare direct.
 

@@ -43,7 +43,10 @@ function Step({ index, title, text, reached }: { index: number; title: string; t
   );
 }
 
-/** Procesul: o linie verticală care se desenează la scroll; nodurile se umplu când linia ajunge la ele. */
+/**
+ * Procesul: o linie verticală care se desenează la scroll; nodurile se umplu când linia ajunge la ele.
+ * `data-scroll-pace`: butonul „Derulează” trece prin pași cu 35% din viteză, ca să se poată citi.
+ */
 export function Process() {
   const listRef = useRef<HTMLOListElement>(null);
   const reduce = useReducedMotionPref();
@@ -87,7 +90,7 @@ export function Process() {
           </Reveal>
         </div>
 
-        <ol ref={listRef} className="relative col-span-full md:col-span-5 md:col-start-2 lg:col-span-6 lg:col-start-7 lg:pt-4">
+        <ol ref={listRef} data-scroll-pace="0.35" className="relative col-span-full md:col-span-5 md:col-start-2 lg:col-span-6 lg:col-start-7 lg:pt-4">
           <span aria-hidden="true" className="absolute top-3 bottom-3 left-[11px] w-px bg-rule md:left-[19px]" />
           <m.span
             aria-hidden="true"
