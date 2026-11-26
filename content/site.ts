@@ -171,12 +171,6 @@ export const services = {
       text: "Oferte simple, gândite pe psihologia cumpărătorului.",
     },
     {
-      art: "ads" as ServiceArt,
-      title: "Reclame plătite",
-      benefit: "Ajungi la oamenii din zona ta care pot deveni clienți.",
-      text: "Campanii pe Facebook, Instagram și Google, gestionate de mine.",
-    },
-    {
       art: "systems" as ServiceArt,
       title: "Sisteme la comandă",
       benefit: "Mai puțină hârtie și mai mult control asupra afacerii.",
@@ -280,116 +274,277 @@ export const steps = {
   ],
 };
 
-/* ───────────── Pachete ───────────── */
+/* ───────────── Pachete și prețuri ───────────── */
+
+/**
+ * PREȚURILE: singurul loc în care le schimbi.
+ * Scrii doar numărul, fără „lei” și fără punct: 1200, nu „1.200 lei”.
+ * Pe site apar automat ca „1.200 lei” sau „400 lei/lună”, iar rândurile „Separat” și
+ * „Economisești” de la pachetele lunare se recalculează singure din prețurile de aici.
+ */
+export const prices = {
+  /** Site-uri de prezentare, plată unică */
+  site: { start: 1200, business: 2200, plus: 3500 },
+  /**
+   * Site Business pe abonament: plata de la început, rata lunară și răscumpărarea
+   * (cât plătești pentru fiecare lună rămasă până la final, ca să păstrezi site-ul).
+   */
+  siteSubscription: { upfront: 300, monthly: 199, buyoutPerMonth: 100 },
+  /** Domeniul, plătit de client: interval aproximativ, pe an */
+  domainPerYear: { min: 50, max: 100 },
+  /** Pachete lunare */
+  bundle: { prezenta: 400, crestere: 1000, complet: 1700 },
+  /** Servicii individuale, pe lună */
+  maintenance: { basic: 100, plus: 200 },
+  social: { posts4: 350, posts10: 750, posts15: 1000 },
+  /** Clip video: unul singur și pachetul de 4 */
+  video: { one: 200, four: 700 },
+};
+
+/** Termenele contractelor, folosite în pachete și în întrebările frecvente. */
+export const terms = {
+  /** Preavizul la renunțare, în zile */
+  noticeDays: 30,
+  /** Perioada minimă pentru social media și pachetele lunare, în luni */
+  monthlyMinMonths: 3,
+  /** Site Business pe abonament: perioada minimă și luna după care site-ul e al clientului */
+  subscriptionMinMonths: 12,
+  subscriptionOwnedAfterMonths: 24,
+};
+
+/** „3 luni”, „24 de luni”, „30 de zile”: în română, de la 20 în sus se pune „de”. */
+export function count(n: number, one: string, many: string) {
+  if (n === 1) return `1 ${one}`;
+  const r = n % 100;
+  return r === 0 || r >= 20 ? `${n} de ${many}` : `${n} ${many}`;
+}
+
+/** 1200 → „1.200” (punct la mii, ca în română) */
+export function formatLei(amount: number) {
+  return String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+/** Un preț afișat: suma și, opțional, perioada („400 lei/lună”, „200 lei/clip”). */
+export type Price = { amount: number; per?: "lună" | "clip" };
 
 export type Plan = {
+  /** Folosit în link (`?pachet=…`): litere mici, fără spații și fără diacritice. */
+  id: string;
   name: string;
-  price: string;
-  unit: string;
-  description: string;
+  /** Ce apare în mesajul completat automat în formular, după „Mă interesează:” */
+  request: string;
+  /** Textul butonului */
+  cta: string;
+  description?: string;
+  /** Un singur preț… */
+  price?: Price;
+  /** …sau mai multe variante, afișate ca tabel (de ex. 4, 10 sau 15 postări). */
+  tiers?: { label: string; price: Price }[];
+  /** Plata de la început, afișată deasupra prețului lunar (site-ul pe abonament). */
+  upfront?: { amount: number; label: string };
   features: string[];
+  /** Pachetele lunare: cât ar costa serviciile incluse, luate separat (se calculează singur). */
+  separate?: number;
   recommended?: boolean;
   footnote?: string;
 };
 
+export type PlanGroup = {
+  id: string;
+  /** Eticheta din comutator: scurtă, ca să încapă pe telefon */
+  tab: string;
+  title: string;
+  subtitle?: string;
+  plans: Plan[];
+  /** Ce au în comun toate planurile din grupă */
+  included?: { title: string; items: string[] };
+  extraNote?: string;
+  /** O variantă afișată sub planuri, pe toată lățimea */
+  variant?: Plan & { label: string };
+};
+
+/** Pachet lunar din servicii individuale: lista „ce include” și prețul lor luate separat. */
+function bundle(parts: { label: string; amount: number }[]) {
+  return {
+    features: parts.map((p) => p.label),
+    separate: parts.reduce((sum, p) => sum + p.amount, 0),
+  };
+}
+
+/** „Contract minim 3 luni.”: pe social media și pe pachetele lunare (din `terms`). */
+const monthlyMinNote = `Contract minim ${count(terms.monthlyMinMonths, "lună", "luni")}.`;
+
 export const pricing = {
   label: "Pachete",
   title: "Prețuri clare. Știi de la început în ce *investești*.",
-  intro:
-    "O plată unică la început sau un abonament lunar, fără efort din partea ta.",
+  intro: "Un site cu plată unică, un pachet lunar sau doar serviciile de care ai nevoie.",
   recommendedLabel: "Recomandat",
-  fromLabel: "de la",
-  planCta: "Alege pachetul",
+  separateLabel: "Separat:",
+  savingsLabel: "Economisești",
   groups: [
     {
-      id: "setup",
-      tab: "O singură plată",
+      id: "site",
+      tab: "Site-uri",
+      title: "Site-uri de prezentare",
+      subtitle: "Plată unică",
       plans: [
         {
+          id: "site-start",
           name: "Start",
-          price: "900",
-          unit: "lei",
-          description: "Pentru afacerile care pornesc de la zero.",
-          features: [
-            "Profil Google Business creat sau optimizat",
-            "Site de prezentare de 1–3 pagini, rapid pe telefon",
-            "10–15 fotografii profesionale",
-          ],
+          request: "Site Start",
+          cta: "Alege pachetul Start",
+          price: { amount: prices.site.start },
+          features: ["Site de o pagină", "Servicii, contact și hartă"],
         },
         {
-          name: "Vizibil",
-          price: "1.500",
-          unit: "lei",
+          id: "site-business",
+          name: "Business",
+          request: "Site Business",
+          cta: "Alege pachetul Business",
           recommended: true,
-          description: "Pentru a fi ales în fața concurenței.",
-          features: [
-            "Tot ce include Start",
-            "Site de 4–6 pagini, cu formular de ofertă",
-            "Clip de prezentare, filmat și editat",
-            "Pagini de Facebook și Instagram",
-          ],
+          price: { amount: prices.site.business },
+          features: ["Site de 4–6 pagini", "Galerie", "SEO de bază", "Configurare profil Google Business"],
         },
         {
-          name: "Complet",
-          price: "3.000",
-          unit: "lei",
-          description: "Pentru proiecte mari, cu ofertă personalizată.",
+          id: "site-plus",
+          name: "Plus",
+          request: "Site Plus",
+          cta: "Alege pachetul Plus",
+          price: { amount: prices.site.plus },
           features: [
-            "Magazin online",
-            "Aplicație sau sistem intern",
-            "Totul pe măsura afacerii tale",
+            "Site de până la 10 pagini",
+            "Funcții extra, de exemplu programări online sau site în 2 limbi",
           ],
-          footnote: "Prețul depinde de proiect.",
         },
-      ] as Plan[],
+      ],
+      included: {
+        title: "Inclus la toate site-urile",
+        items: ["Adaptat pentru telefon", "2 runde de modificări", "Găzduire gratuită inclusă"],
+      },
+      extraNote: `Domeniul se înregistrează pe numele tău (aprox. ${formatLei(prices.domainPerYear.min)}–${formatLei(prices.domainPerYear.max)} lei/an, plătit de tine).`,
+      variant: {
+        id: "site-abonament",
+        label: "Variantă",
+        name: "Site Business pe abonament",
+        request: "Site Business pe abonament",
+        cta: "Alege varianta pe abonament",
+        upfront: { amount: prices.siteSubscription.upfront, label: "la început +" },
+        price: { amount: prices.siteSubscription.monthly, per: "lună" },
+        features: [
+          `Minimum ${count(terms.subscriptionMinMonths, "lună", "luni")}`,
+          "Mentenanța Basic inclusă",
+          `După ${count(terms.subscriptionOwnedAfterMonths, "lună", "luni")}, site-ul devine proprietatea ta`,
+        ],
+      },
     },
     {
       id: "lunar",
-      tab: "Abonament lunar",
+      tab: "Pachete lunare",
+      title: "Pachete lunare",
+      subtitle: "Servicii combinate",
       plans: [
         {
-          name: "Mentenanță",
-          price: "100",
-          unit: "lei / lună",
-          description: "Un site sigur și mereu la zi.",
-          features: [
-            "Actualizări și securitate",
-            "Copii de siguranță",
-            "Monitorizare zilnică",
-            "Modificări mici de conținut",
-          ],
-        },
-        {
+          id: "prezenta",
           name: "Prezență",
-          price: "400",
-          unit: "lei / lună",
+          request: "Pachetul lunar Prezență",
+          cta: "Alege pachetul Prezență",
+          price: { amount: prices.bundle.prezenta, per: "lună" },
+          footnote: monthlyMinNote,
+          ...bundle([
+            { label: "Mentenanță Basic", amount: prices.maintenance.basic },
+            { label: "4 postări pe lună", amount: prices.social.posts4 },
+          ]),
+        },
+        {
+          id: "crestere",
+          name: "Creștere",
+          request: "Pachetul lunar Creștere",
+          cta: "Alege pachetul Creștere",
           recommended: true,
-          description: "Prezență online activă, fără efort.",
+          price: { amount: prices.bundle.crestere, per: "lună" },
+          footnote: monthlyMinNote,
+          ...bundle([
+            { label: "Mentenanță Plus", amount: prices.maintenance.plus },
+            { label: "10 postări pe lună", amount: prices.social.posts10 },
+            { label: "1 clip video pe lună", amount: prices.video.one },
+          ]),
+        },
+        {
+          id: "complet",
+          name: "Complet",
+          request: "Pachetul lunar Complet",
+          cta: "Alege pachetul Complet",
+          price: { amount: prices.bundle.complet, per: "lună" },
+          footnote: monthlyMinNote,
+          ...bundle([
+            { label: "Mentenanță Plus", amount: prices.maintenance.plus },
+            { label: "15 postări pe lună", amount: prices.social.posts15 },
+            { label: "4 clipuri video pe lună", amount: prices.video.four },
+          ]),
+        },
+      ],
+    },
+    {
+      id: "servicii",
+      tab: "Servicii",
+      title: "Servicii individuale",
+      plans: [
+        {
+          id: "mentenanta",
+          name: "Mentenanță",
+          request: "Mentenanță",
+          cta: "Alege mentenanța",
+          description: "Un site sigur și mereu la zi.",
+          tiers: [
+            { label: "Basic", price: { amount: prices.maintenance.basic, per: "lună" } },
+            { label: "Plus", price: { amount: prices.maintenance.plus, per: "lună" } },
+          ],
           features: [
-            "Tot ce include Mentenanță",
-            "4 postări sau clipuri pe lună",
-            "Răspunsuri la recenziile de pe Google",
+            "Basic: găzduire, administrarea domeniului (reînnoire și setări), certificat SSL, monitorizare, backup, o modificare mică pe lună",
+            "Plus: tot ce e în Basic + până la 2 ore de modificări pe lună + raport lunar",
           ],
         },
         {
-          name: "Creștere",
-          price: "800",
-          unit: "lei / lună",
-          description: "Clienți noi, în mod constant.",
-          features: [
-            "Tot ce include Prezență",
-            "8 postări sau clipuri pe lună",
-            "O campanie nouă în fiecare lună",
-            "Administrarea reclamelor plătite",
-            "Raport lunar, pe înțelesul tău",
+          id: "social-media",
+          name: "Social media",
+          request: "Social media (Facebook + Instagram)",
+          cta: "Alege social media",
+          description: "Facebook + Instagram.",
+          tiers: [
+            { label: "4 postări", price: { amount: prices.social.posts4, per: "lună" } },
+            { label: "10 postări", price: { amount: prices.social.posts10, per: "lună" } },
+            { label: "15 postări", price: { amount: prices.social.posts15, per: "lună" } },
           ],
-          footnote: "Bugetul de reclamă se plătește separat.",
+          features: ["Plan lunar", "Design și texte", "Programarea postărilor"],
+          footnote: monthlyMinNote,
         },
-      ] as Plan[],
+        {
+          id: "clip-video",
+          name: "Clip video",
+          request: "Clip video",
+          cta: "Alege clipurile video",
+          description: "Filmat la tine și montat.",
+          tiers: [
+            { label: "1 clip", price: { amount: prices.video.one, per: "clip" } },
+            { label: "4 clipuri", price: { amount: prices.video.four } },
+          ],
+          features: [],
+        },
+      ],
     },
-  ],
-  note: "Prețurile finale se stabilesc după auditul gratuit.",
+  ] as PlanGroup[],
+  notes: ["Prețurile sunt finale, nu se adaugă TVA.", "Pentru proiecte mai mari, cere o ofertă personalizată."],
 };
+
+/** Toate planurile, inclusiv variantele: pentru formular și pentru datele structurate. */
+export const pricingPlans: Plan[] = pricing.groups.flatMap((g) => (g.variant ? [...g.plans, g.variant] : g.plans));
+
+/** Cel mai mic preț de pe site (pentru „de la … lei” din datele pentru Google). */
+export const lowestPrice = Math.min(
+  ...pricingPlans.flatMap((p) => [p.price?.amount, ...(p.tiers ?? []).map((t) => t.price.amount)]).filter(
+    (n): n is number => typeof n === "number",
+  ),
+);
 
 /* ───────────── Portofoliu ───────────── */
 
@@ -455,6 +610,10 @@ export const about = {
 
 /* ───────────── Întrebări frecvente ───────────── */
 
+// Folosite în răspunsurile despre renunțare și proprietate; valorile vin din `terms` și `prices`.
+const notice = count(terms.noticeDays, "zi", "zile");
+const buyout = `${formatLei(prices.siteSubscription.buyoutPerMonth)} lei`;
+
 export const faq = {
   label: "Întrebări",
   title: "Răspunsuri clare, înainte de orice *angajament*.",
@@ -474,12 +633,13 @@ export const faq = {
       a: "Foarte puțin: o discuție la început și aprobarea ta înainte de publicare.",
     },
     {
-      q: "Cine plătește reclamele?",
-      a: "Tu, direct la Meta sau Google. Tu stabilești bugetul și îl poți opri oricând.",
-    },
-    {
       q: "Ce se întâmplă dacă vreau să renunț?",
-      a: "Mă anunți cu 30 de zile înainte. Tot ce am realizat rămâne al tău.",
+      a: [
+        `Mentenanța o poți opri oricând, cu ${notice} preaviz.`,
+        `Social media și pachetele lunare au o perioadă minimă de ${count(terms.monthlyMinMonths, "lună", "luni")}. După aceea le poți opri oricând, cu ${notice} preaviz.`,
+        `Site-ul pe abonament are o perioadă minimă de ${count(terms.subscriptionMinMonths, "lună", "luni")}, iar după ${count(terms.subscriptionOwnedAfterMonths, "lună", "luni")} e al tău. Între lunile ${terms.subscriptionMinMonths} și ${terms.subscriptionOwnedAfterMonths} poți renunța cu ${notice} preaviz. Dacă vrei să păstrezi site-ul, plătești o singură dată ${buyout} pentru fiecare lună rămasă până la luna ${terms.subscriptionOwnedAfterMonths} și site-ul devine al tău. Dacă nu, site-ul se oprește, iar domeniul și conținutul lui (texte, poze) rămân ale tale.`,
+        "Dacă renunți înainte de finalul perioadei minime, plătești lunile rămase din ea.",
+      ],
     },
     {
       q: "Lucrezi doar în anumite orașe?",
@@ -487,7 +647,10 @@ export const faq = {
     },
     {
       q: "Cui îi aparțin site-ul și conturile?",
-      a: "Ție. Totul e pe numele tău, iar accesul meu îl poți retrage oricând.",
+      a: [
+        "Domeniul și conturile (Google, Facebook, Instagram) sunt pe numele tău de la început, iar accesul meu îl poți retrage oricând.",
+        `Site-ul plătit integral e al tău de la livrare. Site-ul pe abonament devine al tău după ${count(terms.subscriptionOwnedAfterMonths, "lună", "luni")} sau mai devreme, prin răscumpărare: între lunile ${terms.subscriptionMinMonths} și ${terms.subscriptionOwnedAfterMonths} plătești o singură dată ${buyout} pentru fiecare lună rămasă până la luna ${terms.subscriptionOwnedAfterMonths}.`,
+      ],
     },
     {
       q: "Am deja site și pagini. Putem porni de la ele?",
@@ -520,7 +683,7 @@ export const contact = {
     successFormspree: "Mulțumesc! Îți răspund în curând.",
     required: "Completează acest câmp.",
     emailSubject: "Cerere audit gratuit",
-    planMessage: "Mă interesează pachetul {plan}.",
+    planMessage: "Mă interesează: {plan}.",
   },
 };
 
@@ -557,7 +720,7 @@ export const auditPage = {
   otherTitle: "Preferi alt canal?",
   faqTitle: "Întrebări despre *audit*.",
   /** Întrebările din `faq` afișate pe pagina de audit (numărate de la 0). */
-  faqItems: [0, 2, 7],
+  faqItems: [0, 2, 6],
   related: [
     { label: "Vezi pachetele", href: "/#pachete" },
     { label: "Află cum lucrez", href: "/#metoda" },

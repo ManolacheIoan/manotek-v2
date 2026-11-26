@@ -17,7 +17,8 @@ type Props = {
   label?: string;
   title?: string;
   intro?: string;
-  items?: { q: string; a: string }[];
+  /** Răspunsul poate avea mai multe paragrafe: `a: ["…", "…"]`. */
+  items?: { q: string; a: string | string[] }[];
 };
 
 /** Întrebări frecvente: listă cu linii fine, accordion fluid și „+” care se rotește. */
@@ -82,7 +83,11 @@ export function Faq({ id = "intrebari", label = faq.label, title = faq.title, in
                         exit={{ height: 0, opacity: 0 }}
                         transition={reduce ? { duration: 0 } : { duration: 0.6, ease: EASE }}
                       >
-                        <StairText text={item.a} className="max-w-[40rem] pr-2 pb-8 text-body text-stone md:pr-14" />
+                        <div className="max-w-[40rem] space-y-3 pr-2 pb-8 md:pr-14">
+                          {(Array.isArray(item.a) ? item.a : [item.a]).map((p) => (
+                            <StairText key={p} text={p} className="text-body text-stone" />
+                          ))}
+                        </div>
                       </m.div>
                     ) : null}
                   </AnimatePresence>

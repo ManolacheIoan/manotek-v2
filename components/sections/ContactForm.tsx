@@ -1,7 +1,7 @@
 "use client";
 
 import { type FormEvent, useEffect, useState } from "react";
-import { contact, pricing, site } from "@/content/site";
+import { contact, pricingPlans, site } from "@/content/site";
 import { Button } from "../ui/Button";
 import { TextLink } from "../ui/TextLink";
 
@@ -10,7 +10,8 @@ const f = contact.form;
 type Fields = { name: string; business: string; reach: string; message: string };
 const empty: Fields = { name: "", business: "", reach: "", message: "" };
 const required: (keyof Fields)[] = ["name", "reach", "message"];
-const PLANS = new Set(pricing.groups.flatMap((g) => g.plans.map((p) => p.name)));
+/** id-ul din link (`?pachet=site-business`) → textul pus în mesaj („Site Business”). */
+const PLANS = new Map(pricingPlans.map((p) => [p.id, p.request]));
 
 /**
  * Formularul de contact.
@@ -96,12 +97,12 @@ export function ContactForm({ noteClassName = "" }: Props) {
   const [errors, setErrors] = useState<Partial<Record<keyof Fields, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "sent-formspree">("idle");
 
-  // „Alege pachetul X” (secțiunea Pachete) deschide /audit-gratuit?pachet=X și completează mesajul.
-  // Sunt acceptate doar numele de pachete existente.
+  // Butoanele din secțiunea Pachete deschid /audit-gratuit?pachet=<id> și completează mesajul.
+  // Sunt acceptate doar pachetele existente.
   useEffect(() => {
     const onPlan = (e: Event) => {
-      const plan = (e as CustomEvent<string>).detail;
-      if (!PLANS.has(plan)) return;
+      const plan = PLANS.get((e as CustomEvent<string>).detail);
+      if (!plan) return;
       setValues((v) => (v.message.trim() ? v : { ...v, message: f.planMessage.replace("{plan}", plan) }));
     };
     window.addEventListener("manotek:plan", onPlan);

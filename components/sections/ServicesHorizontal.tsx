@@ -1,7 +1,7 @@
 "use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { type CSSProperties, useRef } from "react";
 import { services } from "@/content/site";
 import { useReducedMotionPref } from "@/lib/hooks";
 import { ServiceArt } from "../art/ServiceArt";
@@ -10,8 +10,8 @@ import { ArrowRight } from "../ui/Icons";
 import { SectionLabel } from "../ui/SectionLabel";
 import { StairText } from "../ui/StairText";
 
-// Distanța orizontală = 40vw (intro) + 6 × 52vw (panouri) + 8vw (final) − 100vw. Vezi `.hs` în globals.css.
-const DISTANCE_VW = 260;
+// Distanța orizontală = 40vw (intro) + n × 52vw (un panou pe serviciu) + 8vw (final) − 100vw. Vezi `.hs` în globals.css.
+const DISTANCE_VW = 40 + services.items.length * 52 + 8 - 100;
 
 /**
  * Desktop: secțiune lipicioasă; panourile defilează lateral la scroll vertical.
@@ -25,7 +25,12 @@ export function ServicesHorizontal() {
   const total = services.items.length;
 
   return (
-    <div ref={ref} data-scroll-pace="0.55" className="hs relative hidden lg:block">
+    <div
+      ref={ref}
+      data-scroll-pace="0.55"
+      className="hs relative hidden lg:block"
+      style={{ "--hs-count": total } as CSSProperties}
+    >
       <div className="hs-sticky sticky top-0 h-screen overflow-hidden">
         <m.div data-scrub className="hs-track flex h-full" style={{ x: reduce ? 0 : x }}>
           <div className="flex h-full w-[var(--hs-intro)] shrink-0 flex-col justify-center pr-[4vw] pl-[clamp(1.25rem,4.5vw,4.5rem)]">

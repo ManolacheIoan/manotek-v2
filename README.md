@@ -50,10 +50,10 @@ Fișierul e împărțit pe blocuri, în ordinea de pe pagină:
 | `hero` | Titlul mare (rând cu rând), subtitlul, butoanele, etichetele buclei |
 | `manifest` | Fraza care se luminează la scroll |
 | `problems` | Cele trei situații în care se recunoaște patronul |
-| `services` | Cele șase servicii |
+| `services` | Serviciile (câte un panou pentru fiecare) |
 | `method` | Bucla obiceiului și cele cinci principii |
 | `steps` | Procesul în patru pași |
-| `pricing` | Pachetele: o singură plată și abonament lunar |
+| `prices`, `pricing` | Prețurile (`prices`, doar numere) și pachetele: site-uri, pachete lunare, servicii individuale |
 | `portfolio` | Studiile de caz (lista `cases`) |
 | `about` | Despre tine și fotografia |
 | `faq` | Întrebările frecvente |
@@ -72,10 +72,10 @@ Reguli simple:
 
 **Exemple:**
 
-- *Schimbi un preț:* în `pricing.groups`, la pachetul dorit, modifici `price: "1.500"`.
+- *Schimbi un preț:* în `prices`, modifici doar numărul (de ex. `business: 2200`). Pe site apare automat „2.200 lei”, iar „Separat” și „Economisești” de la pachetele lunare se recalculează singure.
 - *Schimbi ce include un pachet:* editezi lista `features` a pachetului.
 - *Adaugi o întrebare frecventă:* în `faq.items`, copiezi un bloc `{ q: "...", a: "..." },` și îl modifici.
-- *Pagina de audit:* butoanele „Audit gratuit”, „Cere un audit gratuit”, „Alege pachetul X” și „Programează o discuție” duc la `/audit-gratuit`. Când vii din „Alege pachetul X”, mesajul din formular e completat automat cu pachetul ales. Întrebările afișate acolo le alegi în `auditPage.faqItems` (numărul întrebării din `faq.items`, de la 0).
+- *Pagina de audit:* butoanele „Audit gratuit”, „Cere un audit gratuit”, butoanele din secțiunea Pachete și „Programează o discuție” duc la `/audit-gratuit`. Când vii de la un pachet, mesajul din formular e completat automat cu pachetul ales (câmpul `request` al pachetului). Întrebările afișate acolo le alegi în `auditPage.faqItems` (numărul întrebării din `faq.items`, de la 0).
 - *Adaugi un studiu de caz:* în `portfolio.cases`, adaugi un obiect ca în exemplul din comentariu. Cât timp lista e goală, pe site apare blocul „Primele proiecte vin în curând”.
 
 ---

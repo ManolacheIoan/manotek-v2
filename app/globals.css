@@ -387,7 +387,8 @@ html.lenis body {
   --hs-intro: 40vw;
   --hs-panel: 52vw;
   --hs-end: 8vw;
-  --hs-distance: calc(var(--hs-intro) + 6 * var(--hs-panel) + var(--hs-end) - 100vw);
+  /* --hs-count: numărul de servicii, pus din ServicesHorizontal */
+  --hs-distance: calc(var(--hs-intro) + var(--hs-count, 6) * var(--hs-panel) + var(--hs-end) - 100vw);
   height: calc(100vh + var(--hs-distance));
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { Providers } from "@/components/providers/Providers";
-import { about, site } from "@/content/site";
+import { about, formatLei, lowestPrice, site } from "@/content/site";
 import "./globals.css";
 
 // latin-ext e obligatoriu pentru ă, ș, ț (â și î sunt în latin)
@@ -68,14 +68,14 @@ const jsonLd = {
   logo: `${site.url}/icon.png`,
   areaServed: { "@type": "Country", name: "România" },
   knowsLanguage: "ro",
-  priceRange: "de la 100 lei",
+  priceRange: `de la ${formatLei(lowestPrice)} lei`,
   founder: { "@type": "Person", name: about.name },
   serviceType: [
     "Site-uri de prezentare",
     "Profil Google Business",
     "Administrare social media",
     "Video și foto de prezentare",
-    "Campanii, oferte și reclame plătite",
+    "Campanii și oferte",
     "Magazine online și aplicații la comandă",
     "Mentenanță și monitorizare site-uri",
   ],
